@@ -18,7 +18,7 @@ class InteractiveBar:
         )
         return bar
     
-    def save_plot(self, filename="plots/interactive_bar_chart.html"):
+    def save_plot(self, filename="assets/interactive_bar_chart.html"):
         plot = self.create_plot()
 
         # Save the plot to the specified filename
