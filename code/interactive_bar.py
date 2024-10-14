@@ -1,29 +1,26 @@
 import altair as alt
-import pandas as pd
 
 class InteractiveBar:
     def __init__(self, dataframe):
         self.df = dataframe
 
     def create_plot(self):
-        # Define the 4 columns for the user to toggle between
-        injury_columns = ["Total Fatal Injuries", "Total Serious Injuries", "Total Minor Injuries", "Total Uninjured"]
-
-        # Create a selection dropdown that allows toggling between columns
-        dropdown = alt.binding_select(options=injury_columns, name="Injury Type: ")
-        selection = alt.param(bind=dropdown, value="Total Fatal Injuries")
-
         # Define the base chart with interactivity
         bar = alt.Chart(self.df).mark_bar().encode(
-            alt.X("value:Q", title="Count"),
-            alt.Y("column:N", title="Injury Type"),
-            tooltip=["column:N", "value:Q"]
-            ).transform_filter(
-                selection
-            ).properties(
-                width=600,
-                height=400
-            )
+            alt.X("month(Event Date):T", title="Month"),
+            alt.Y("sum(Total Fatal Injuries):Q", title="Fatalities"),
+            alt.Color("Aircraft Damage:N"),
+            tooltip=["sum(Total Fatal Injuries):Q", "sum(Total Serious Injuries):Q", "sum(Total Minor Injuries):Q", "sum(Total Uninjured):Q"]
+        ).properties(
+            title='Total Fatal Injuries Over Time (Grouped by Months)',
+            width=600,
+            height=400
+        )
+        return bar
+    
+    def save_plot(self, filename="plots/interactive_bar_chart.html"):
+        plot = self.create_plot()
 
-        # Combine the chart with the interactive selection
-        return bar.add_params(selection)
+        # Save the plot to the specified filename
+        plot.save(filename) 
+        print(f"Successfully saved interactive bar plot to {filename}!")

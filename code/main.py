@@ -4,21 +4,23 @@ from interactive_bar import InteractiveBar
 
 def main():
     file_path = "data/airline_accidents.csv"
-    process_columns = ["Total Fatal Injuries", "Total Serious Injuries", "Total Minor Injuries", "Total Uninjured", "Latitude", "Longitude"]
+    numeric_columns = ["Total Fatal Injuries", "Total Serious Injuries", "Total Minor Injuries", "Total Uninjured", "Latitude", "Longitude"]
+    categorical_columns = ["Event Date", "Aircraft Damage"] # adjust columns as needed if you need to preprocess that column
 
     # Initialize the preprocessor
-    preprocessor = DataPreprocessor(file_path, process_columns)
+    preprocessor = DataPreprocessor(file_path, numeric_columns)
 
     # Load and preprocess the data
     preprocessor.load_data()
-    preprocessor.preprocess_columns()
+    preprocessor.preprocess_numeric_columns()
+    preprocessor.preprocess_cat_columns(categorical_columns)
 
     # Get the processed dataframe
     df = preprocessor.get_dataframe()
     
-    interactive_plot = InteractiveBar(df)
-    chart = interactive_plot.create_plot()
-    chart.display()
-    
+    # Generate and save bar plot
+    interactive_bar_plot = InteractiveBar(df)
+    interactive_bar_plot.save_plot()
+
 if __name__ == "__main__":
     main()

@@ -1,21 +1,19 @@
-
 import pandas as pd
 pd.set_option('display.max_columns', None)
 
-
 class DataPreprocessor:
-    def __init__(self, file_path, process_columns):
+    def __init__(self, file_path, numeric_columns):
         self.file_path = file_path
-        self.process_columns = process_columns
+        self.numeric_columns = numeric_columns
         self.df = None
 
     def load_data(self):
         """Load the CSV file into a pandas dataframe."""
         self.df = pd.read_csv(self.file_path)
     
-    def preprocess_columns(self):
+    def preprocess_numeric_columns(self):
         """Preprocess specified columns: remove whitespaces, fill empty rows, and convert to numeric."""
-        for column in self.process_columns:
+        for column in self.numeric_columns:
             # Replace whitespaces with nothing
             self.df[column] = self.df[column].astype(str).str.replace(" ", "")
 
@@ -25,6 +23,15 @@ class DataPreprocessor:
 
             # Convert to numeric
             self.df[column] = pd.to_numeric(self.df[column], errors='coerce')
+
+    def preprocess_cat_columns(self, cat_columns):
+        """Preprocess specified categorical columns: remove whitespaces."""
+        for column in cat_columns:
+            # Replace whitespaces with nothing
+            self.df[column] = self.df[column].astype(str).str.replace(" ", "")
+
+            if column == "Aircraft Damage":
+                self.df[column] = self.df[column].replace("", "Unknown").fillna("Unknown")
     
     def get_dataframe(self):
         """Return the processed dataframe."""
