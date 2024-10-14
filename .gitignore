@@ -3,4 +3,4 @@
 *.log
 
 __pycache__/
-plots/interactive_bar_chart.html
+assets/interactive_bar_chart.html
