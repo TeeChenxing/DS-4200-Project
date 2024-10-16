@@ -6,7 +6,7 @@ from interactive_scatterplot import InteractiveScatterplot
 def main():
     file_path = "data/airline_accidents.csv"
     numeric_columns = ["Total Fatal Injuries", "Total Serious Injuries", "Total Minor Injuries", "Total Uninjured", "Latitude", "Longitude"]
-    categorical_columns = ["Aircraft Damage"] # adjust columns as needed if you need to preprocess that column
+    categorical_columns = ["Aircraft Damage", "Broad Phase of Flight", "Aircraft Category", "Purpose of Flight", "Number of Engines"] # adjust columns as needed if you need to preprocess that column
     dateTime_columns = ["Event Date"]
 
     # Initialize the preprocessor

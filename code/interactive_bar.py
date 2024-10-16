@@ -7,12 +7,12 @@ class InteractiveBar:
     def create_plot(self):
         # Define the base chart with interactivity
         bar = alt.Chart(self.df).mark_bar().encode(
-            alt.X("month(Event Date):T", title="Month"),
+            alt.X("Broad Phase of Flight:N", title="Phase of Flight"),
             alt.Y("sum(Total Fatal Injuries):Q", title="Fatalities"),
-            alt.Color("Aircraft Damage:N"),
+            alt.Color("Number of Engines:N"),
             tooltip=["sum(Total Fatal Injuries):Q", "sum(Total Serious Injuries):Q", "sum(Total Minor Injuries):Q", "sum(Total Uninjured):Q"]
         ).properties(
-            title='Total Fatal Injuries Over Time (Grouped by Months)',
+            title='Total Fatal Injuries During Phase of Flight',
             width=600,
             height=400
         )

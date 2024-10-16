@@ -29,9 +29,12 @@ class DataPreprocessor:
         for column in cat_columns:
             # Replace whitespaces with nothing
             self.df[column] = self.df[column].astype(str).str.replace(" ", "")
-
-            if column == "Aircraft Damage":
+            
+            if column not in ["Broad Phase of Flight"]:
                 self.df[column] = self.df[column].replace("", "Unknown").fillna("Unknown")
+            
+            if column == "Broad Phase of Flight":
+                self.df[column] = self.df[column].replace("", "UNKNOWN").fillna("UNKNOWN")
                 
     def preprocess_dateTime_columns(self, dateTime_columns):
         """Preprocess specified datetime columns: convert to datetime."""
