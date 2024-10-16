@@ -22,7 +22,7 @@ class InteractiveScatterplot:
                                                                                       range=['red', 'orange', 'yellow', 'grey'])),
             tooltip=['Event Date:T', 'Total Fatal Injuries:Q', 'Aircraft Damage:N', 'Location:O', 'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
             ).properties(
-                title='Total Fatal Aircraft Injuries Over Time (Starting from 1980)',
+                title='Total Fatal Aircraft Injuries Over Time',
                 height=500,
                 width=600
             ).interactive()
