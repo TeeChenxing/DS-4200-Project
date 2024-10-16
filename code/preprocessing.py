@@ -32,6 +32,11 @@ class DataPreprocessor:
 
             if column == "Aircraft Damage":
                 self.df[column] = self.df[column].replace("", "Unknown").fillna("Unknown")
+                
+    def preprocess_dateTime_columns(self, dateTime_columns):
+        """Preprocess specified datetime columns: convert to datetime."""
+        for column in dateTime_columns:
+            self.df[column] = pd.to_datetime(self.df[column], errors='coerce')
     
     def get_dataframe(self):
         """Return the processed dataframe."""
