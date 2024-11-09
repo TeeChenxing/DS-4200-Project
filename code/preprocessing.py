@@ -9,7 +9,7 @@ class DataPreprocessor:
 
     def load_data(self):
         """Load the CSV file into a pandas dataframe."""
-        self.df = pd.read_csv(self.file_path)
+        self.df = pd.read_csv(self.file_path, low_memory=False)
     
     def preprocess_numeric_columns(self):
         """Preprocess specified columns: remove whitespaces, fill empty rows, and convert to numeric."""
@@ -24,6 +24,10 @@ class DataPreprocessor:
             # Convert to numeric
             self.df[column] = pd.to_numeric(self.df[column], errors='coerce')
 
+        # FIX THIS
+        self.df = self.df[self.df['Number of Engines'] != "Unknown"]
+
+
     def preprocess_cat_columns(self, cat_columns):
         """Preprocess specified categorical columns: remove whitespaces."""
         for column in cat_columns:
@@ -35,12 +39,15 @@ class DataPreprocessor:
             
             if column == "Broad Phase of Flight":
                 self.df[column] = self.df[column].replace("", "UNKNOWN").fillna("UNKNOWN")
+
+        self.df = self.df[self.df['Broad Phase of Flight'] != "UNKNOWN"]
                 
     def preprocess_dateTime_columns(self, dateTime_columns):
         """Preprocess specified datetime columns: convert to datetime."""
         for column in dateTime_columns:
             self.df[column] = pd.to_datetime(self.df[column], errors='coerce')
-    
+
+
     def get_dataframe(self):
         """Return the processed dataframe."""
         return self.df
