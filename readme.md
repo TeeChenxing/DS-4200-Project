@@ -11,9 +11,6 @@
     <img src="https://img.shields.io/badge/-CSS-black?style=for-the-badge&logoColor=white&logo=CSS3&color=ffd2d2" alt="tailwindcss" />
     <img src="https://img.shields.io/badge/-Javascript-black?style=for-the-badge&logoColor=white&logo=JavaScript&color=ffeeee" alt="tailwindcss" />
   </div>
-  <br />
-    <img src="https://s1.ezgif.com/tmp/ezgif-1-2268a7b760.gif" alt="Project Banner">
-  <br />
 </div>
 
 ## Dataset
@@ -26,4 +23,3 @@ We will be using `airline_accidents.csv` from the [Kaggle dataset](https://www.k
 - Miles Vollmer: Bar Chart (HTML/CSS/JS), Scatter Plot.
 - Souren Prakash: Interactive Sankey diagram.
 - Teera Tesharojanasup: Interactive bar chart, GitHub setup, Initial preprocessing steps.
-
