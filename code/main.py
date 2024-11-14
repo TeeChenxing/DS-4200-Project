@@ -4,7 +4,7 @@ from interactive_scatterplot import InteractiveScatterplot
 from map import Map
 
 def main():
-    file_path = "/data/airline_accidents.csv"
+    file_path = "/Users/andreakeiper/Documents/fall24/ds4200/DS-4200-Project/data/airline_accidents.csv"
     numeric_columns = ["Total Fatal Injuries", "Total Serious Injuries", "Total Minor Injuries", "Total Uninjured", "Latitude", "Longitude"]
     categorical_columns = ["Aircraft Damage", "Broad Phase of Flight", "Aircraft Category", "Purpose of Flight", "Number of Engines"] # adjust columns as needed if you need to preprocess that column
     dateTime_columns = ["Event Date"]
