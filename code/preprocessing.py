@@ -47,7 +47,26 @@ class DataPreprocessor:
         for column in dateTime_columns:
             self.df[column] = pd.to_datetime(self.df[column], errors='coerce')
 
+        
+    def group_df(self, df, group_list):
+        """
+        Group the dataframe by the specified columns in group_list.
+        """
+        if len(group_list) == 2:
+                group_col1, group_col2 = group_list[0], group_list[1]
+                grouped_df = df.groupby([group_col1, group_col2]).size().reset_index(name="Total Fatal Injuries")
+        elif len(group_list) == 3:
+                group_col1, group_col2, group_col3 = group_list[0], group_list[1], group_list[2]
+                grouped_df = df.groupby([group_col1, group_col2, group_col3]).size().reset_index(name="Total Fatal Injuries")
+        else:
+                raise ValueError("group_list must contain 2 or 3 columns.")
+            
+        return grouped_df
+
 
     def get_dataframe(self):
         """Return the processed dataframe."""
         return self.df
+    
+    
+        
