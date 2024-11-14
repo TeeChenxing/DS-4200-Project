@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-4f53cda18c2baa0c0354bb5f9a3ecbe5"}, "mark": {"type": "circle"}, "encoding": {"color": {"field": "Number of Engines", "title": "Number of Engines", "type": "nominal"}, "opacity": {"condition": {"param": "EngineFilter", "value": 1}, "value": 0.1}, "tooltip": [{"field": "Event Month", "format": "%B, %Y", "type": "temporal"}, {"field": "Total Fatalities", "type": "quantitative"}, {"field": "Number of Engines", "type": "nominal"}], "x": {"field": "Event Month", "title": "Date", "type": "temporal"}, "y": {"field": "Total Fatalities", "scale": {"type": "sqrt"}, "title": "Total Fatalities per Month", "type": "quantitative"}}, "height": 500, "params": [{"name": "EngineFilter", "select": {"type": "point", "fields": ["Number of Engines"]}, "bind": {"input": "radio", "options": ["1", "2", "3", "4"], "name": "Filter by Number of Engines"}}], "title": "Sum of Fatal Aircraft Fatalities per Month Since 1980, by Number of Engines", "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-4f53cda18c2baa0c0354bb5f9a3ecbe5": []}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>
