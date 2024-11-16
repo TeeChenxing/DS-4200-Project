@@ -48,7 +48,7 @@ class DataPreprocessor:
             self.df[column] = pd.to_datetime(self.df[column], errors='coerce')
 
         
-    def group_df(self, df, group_list):
+    def group_df(self, df, group_list, min_fatalities):
         """
         Group the dataframe by the specified columns in group_list.
         """
@@ -60,7 +60,7 @@ class DataPreprocessor:
                 grouped_df = df.groupby([group_col1, group_col2, group_col3]).size().reset_index(name="Total Fatal Injuries")
         else:
                 raise ValueError("group_list must contain 2 or 3 columns.")
-            
+        df = df[df['Total Fatal Injuries'] >= min_fatalities]
         return grouped_df
 
 

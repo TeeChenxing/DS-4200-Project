@@ -1,16 +1,18 @@
 import pandas as pd
 import plotly.graph_objects as go
 
-
 class SPSankey:
-    def __init__(self, df, val_col, *arg, **kwargs):
+    def __init__(self, df, val_col, columns, width=600, height=400):
         """
-        Initialize the Sankey class with a dataframe, value column, and other column names.
+        Initialize the Sankey class with a dataframe, value column, other column names,
+        and optional width and height for the figure.
         """
         self.df = df
         self.val_col = val_col
-        self.columns = list(kwargs.values())  # Get the list of column names from kwargs
-        self.arg = arg
+        self.columns = columns  # List of columns
+        self.width = width      # Width of the Sankey diagram (default: 600)
+        self.height = height    # Height of the Sankey diagram (default: 400)
+        self.labels = []        # Node labels will be created later
 
     def code_mapping(self):
         """
@@ -18,11 +20,13 @@ class SPSankey:
         """
         sources = {}
         i = 0
+        # Combine the unique values from both 'src' and 'targ' columns
         for name in pd.concat([self.df['src'], self.df['targ']]).unique():
             sources[name] = i
             i += 1
+        # Replace the source and target columns with their integer codes
         self.df = self.df.replace({'src': sources, 'targ': sources})
-        self.labels = list(sources.keys())
+        self.labels = list(sources.keys())  # The unique values will be the labels for nodes
         return self.df, self.labels
 
     def stacking(self):
@@ -43,24 +47,30 @@ class SPSankey:
 
     def make_sankey(self):
         """
-        Create and display the Sankey diagram.
+        Create and display the Sankey diagram with labels on nodes.
         """
         self.stacking()
         self.code_mapping()
 
         values = self.df[self.val_col] if self.val_col else [1] * len(self.df)
         link = {'source': self.df['src'], 'target': self.df['targ'], 'value': values}
+        
+        # Create the node dictionary with the 'label' being the node labels
         node = {'label': self.labels}
 
+        # Generate Sankey diagram
         sk = go.Sankey(link=link, node=node)
         fig = go.Figure(sk)
-        width = self.arg[0]
-        height = self.arg[1]
 
-        fig.update_layout(autosize=False, width=width, height=height)
+        # Set the figure size using class variables
+        fig.update_layout(
+            autosize=True,
+            title_text=f"Sankey Diagram for {', '.join(self.columns)}",
+            width=self.width,
+            height=self.height
+        )
         fig.show()
         return fig
-
 
 def main():
     # Sample data
@@ -70,15 +80,9 @@ def main():
             'Values': [10, 20, 15, 15]}
     df = pd.DataFrame(data)
 
-    # Initialize Sankey class and generate Sankey diagram
-    sankey_obj = SPSankey(df, 'Values', width=600, height=400, col1='A', col2='B', col3='C')
+    # Initialize Sankey class and generate Sankey diagram with specified width and height
+    sankey_obj = SPSankey(df, 'Values', ['A', 'B', 'C'], width=800, height=600)
     sankey_obj.make_sankey()
-
-    # Initialize df_adjustments class and group data
-    df_adj = df_adjustments()
-    grouped_df = df_adj.grouping(df, ['A', 'B'])
-    print(grouped_df)
-
 
 if __name__ == '__main__':
     main()

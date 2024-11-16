@@ -21,7 +21,7 @@ df = preprocessor.get_dataframe()
 pn.extension()
 
 # Widgets for filtering and visualization
-Min_Total_Fatal_injuries = pn.widgets.IntSlider(name='Min Total Fatal Injuries', start=1, end=100000, value=10)
+Min_Total_Fatal_injuries = pn.widgets.IntSlider(name='Min Total Fatal Injuries', start=1, end=1000, value=1)
 checkbox_group = pn.widgets.CheckBoxGroup(name='Checkbox categories', value = ["Number of Engines"], options=["Number of Engines"], inline=True)
 
 # Plot widgets
@@ -30,7 +30,7 @@ height = pn.widgets.IntSlider(name="Diagram height", start=200, end=2500, step=1
 Dimentions = [width, height]
 
 # Dropdown widgets for dynamic selection
-columns_dropdown = pn.widgets.Select(name='Select Column', options=df.columns.tolist())
+columns_dropdown = pn.widgets.Select(name='Select Column', options=["Remove Filter"] + list(df.columns))
 values_dropdown = pn.widgets.Select(name='Select Value', options=[])
 
 def update_values_dropdown(selected_column):
@@ -38,6 +38,11 @@ def update_values_dropdown(selected_column):
 
 columns_dropdown.param.watch(lambda event: update_values_dropdown(event.new), 'value')
 
+def update_values_dropdown(selected_column):
+    if selected_column == "Remove Filter":
+        values_dropdown.options = []
+    else:
+        values_dropdown.options = df[selected_column].unique().tolist()
 
 
 
@@ -51,16 +56,19 @@ def get_plot(df, min_total_fatal_injuries, checkbox_group, dimentions, selected_
         filtered_df = df[df[selected_column] == selected_val]
     else:
         filtered_df = df
+
     
     # Access the selected layers through checkbox_group.value
     selected_layers = ["Broad Phase of Flight"] + checkbox_group + ["Aircraft Category"]
     
-    grouped_data = preprocessor.group_df(filtered_df, selected_layers)
-    fig = SPSankey(grouped_data, 'Values', dimentions, selected_layers)
+    grouped_data = preprocessor.group_df(filtered_df, selected_layers, min_total_fatal_injuries)
+    sky = SPSankey(grouped_data, 'Values', dimentions, selected_layers)
+    fig = sky.make_sankey()
     return fig
 
 # Bind widgets to function
-plot = pn.bind(get_plot, df, Min_Total_Fatal_injuries, checkbox_group, Dimentions, columns_dropdown.param.value, values_dropdown.param.value)
+plot = pn.bind(get_plot, df, Min_Total_Fatal_injuries, checkbox_group.value, Dimentions, columns_dropdown.param.value, values_dropdown.param.value)
+
 
 
 
