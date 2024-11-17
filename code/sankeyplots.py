@@ -37,8 +37,10 @@ def main():
     Aircraft_category = grouping_data(df,'fatality_amount', group1 = "Broad Phase of Flight",group2 = "Aircraft Category")
     #print(engine_type)
     sk = SPSankey(Aircraft_category,'fatality_amount', ["Broad Phase of Flight", "Aircraft Category"], width=1000, height=1000 )
-    sk.make_sankey()
+    fig = sk.make_sankey()
 
+    fig.write_html("sankey_plot_1.html")
+    
 
 
     #creating a larger group to plot 
@@ -46,6 +48,8 @@ def main():
 
     purpose_flight = grouping_data(df,'fatality_amount', group1 = "Purpose of Flight", group2 = "Broad Phase of Flight", group3 = "Aircraft Category")
     sk = SPSankey(purpose_flight, 'fatality_amount',[ "Purpose of Flight", "Broad Phase of Flight", "Aircraft Category"], width=1000, height=1000 )
-    sk.make_sankey()
+    fig = sk.make_sankey()
+
+    fig.write_html("sankey_plot_2.html") 
 
 main()
