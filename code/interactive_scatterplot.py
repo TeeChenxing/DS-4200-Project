@@ -22,22 +22,34 @@ class InteractiveScatterplot:
         # Convert 'Number of Engines' to string for compatibility with radio button binding
         df_fatalities['Number of Engines'] = df_fatalities['Number of Engines'].astype(str)
 
-        # Define an interactive selection for the number of engines with options as strings
-        engine_filter = alt.selection_point(fields=['Number of Engines'], 
-                                            bind=alt.binding_radio(name='Filter by Number of Engines', options=['1', '2', '3', '4']),
-                                            name='EngineFilter')
+       # Define a slider for filtering by the minimum number of fatalities
+        slider_cutoff = alt.binding_range(min=0, max=df_fatalities['Total Fatal Injuries'].max(), step=1, name="Min Fatalities: ")
+        slider_selection = alt.param(bind=slider_cutoff, value=0)  # Default slider value is 0
 
-        # Define base chart with square root scale on the y-axis, conditional opacity, and the engine filter
+        # Define an interactive selection for the number of engines with options as strings
+        input_radio = alt.binding_radio(
+            options=['1', '2', '3', '4', None],
+            labels=['1 Engine', '2 Engines', '3 Engines', '4 Engines', 'All'],
+            name="Engines: "
+        )
+        engine_filter = alt.selection_point(fields=['Number of Engines'], bind=input_radio)
+
+        # Define the base chart with square root scale, conditional opacity, and filters
         scatter = alt.Chart(df_fatalities).mark_circle().encode(
-            alt.X('Event Date:T', title='Date'),  # Start x-axis at 1980
-            alt.Y('Total Fatal Injuries:Q', title='Fatal Injuries', scale=alt.Scale(type='sqrt')),  # Square root scale applied here
-            alt.Color('Aircraft Damage:N', title='Aircraft Damage', 
-                    scale=alt.Scale(domain=['Destroyed', 'Minor', 'Substantial', 'Unknown'], 
+            alt.X('Event Date:T', title='Date'),
+            alt.Y('Total Fatal Injuries:Q', title='Fatal Injuries', scale=alt.Scale(type='sqrt')),
+            alt.Color('Aircraft Damage:N', title='Aircraft Damage',
+                    scale=alt.Scale(domain=['Destroyed', 'Minor', 'Substantial', 'Unknown'],
                                     range=['red', 'orange', 'yellow', 'grey'])),
-            opacity=alt.condition(engine_filter, alt.value(1), alt.value(0.0)),  # Full opacity for selected points, reduced for others
-            tooltip=['Event Date:T', 'Total Fatal Injuries:Q', 'Aircraft Damage:N', 'Location:O', 'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
+            tooltip=['Event Date:T', 'Total Fatal Injuries:Q', 'Aircraft Damage:N', 'Location:O',
+                    'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
         ).add_params(
+            slider_selection,
             engine_filter
+        ).transform_filter(
+            (alt.datum['Total Fatal Injuries'] >= slider_selection)  # Filter based on slider
+        ).transform_filter(
+            engine_filter  # Filter based on engine selection
         ).properties(
             title='Total Fatal Aircraft Injuries Over Time (Starting from 1980)',
             height=500,
