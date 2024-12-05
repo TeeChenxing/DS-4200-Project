@@ -13,7 +13,6 @@ class InteractiveScatterplot:
         # Define the scatter plot with interactivity
         # This scatter plot looks at fatal injuries over time
         # With an interactive aspect which shows you incident data when you hover over a point, as well as moving and zooming capabilities
-
         # Enable CSV transformer for handling large datasets
         alt.data_transformers.enable('csv')
 
@@ -26,8 +25,8 @@ class InteractiveScatterplot:
 
         # Define an interactive selection for aircraft damage
         input_radio = alt.binding_radio(
-            options=['Destroyed', 'Minor', 'Substantial', 'Unknown', None],
-            labels=['Destroyed', 'Minor', 'Substantial', 'Unknown', 'All'],
+            options=['Destroyed','Substantial' , 'Minor', 'Unknown', None],
+            labels=['Destroyed','Substantial' , 'Minor', 'Unknown', 'All'],
             name="Aircraft Damage: "
         )
         damage_filter = alt.selection_point(fields=['Aircraft Damage'], bind=input_radio)
@@ -36,11 +35,11 @@ class InteractiveScatterplot:
         zoom = alt.selection_interval(bind='scales')
 
         # Define the base chart with square root scale, conditional opacity, and filters
-        scattter = alt.Chart(df_fatalities).mark_circle().encode(
+        scatter = alt.Chart(df_fatalities).mark_circle().encode(
             alt.X('Event Date:T', title='Date'),
             alt.Y('Total Fatal Injuries:Q', title='Fatal Injuries', scale=alt.Scale(type='sqrt')),
             alt.Color('Aircraft Damage:N', title='Aircraft Damage',
-                    scale=alt.Scale(domain=['Destroyed', 'Minor', 'Substantial', 'Unknown'],
+                    scale=alt.Scale(domain=['Destroyed','Substantial', 'Minor', 'Unknown'],
                                     range=['red', '#FF8C00', '#FFBF00', 'grey'])),
             tooltip=['Event Date:T', 'Total Fatal Injuries:Q', 'Aircraft Damage:N', 'Location:O',
                     'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
@@ -57,9 +56,7 @@ class InteractiveScatterplot:
             height=500,
             width=600
         )
-
-        # Display the interactive plot
-        return scattter
+        return scatter
     
     def create_sum_plot(self):
         
