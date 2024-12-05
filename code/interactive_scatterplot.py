@@ -41,7 +41,7 @@ class InteractiveScatterplot:
             alt.Y('Total Fatal Injuries:Q', title='Fatal Injuries', scale=alt.Scale(type='sqrt')),
             alt.Color('Aircraft Damage:N', title='Aircraft Damage',
                     scale=alt.Scale(domain=['Destroyed', 'Minor', 'Substantial', 'Unknown'],
-                                    range=['red', 'orange', 'yellow', 'grey'])),
+                                    range=['red', '#FF8C00', '#FFBF00', 'grey'])),
             tooltip=['Event Date:T', 'Total Fatal Injuries:Q', 'Aircraft Damage:N', 'Location:O',
                     'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
         ).add_params(
