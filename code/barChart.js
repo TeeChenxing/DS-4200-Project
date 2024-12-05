@@ -4,7 +4,7 @@ d3.csv("../data/airline_accidents.csv").then(data => {
     const incidentCounts = d3.rollup(
         data,
         v => v.length,
-        d => d.Make
+        d => d.Make.charAt(1).toUpperCase() + d.Make.slice(2).toLowerCase()
     );
 
     // Convert the Map to an array of objects and sort by incident count in descending order
