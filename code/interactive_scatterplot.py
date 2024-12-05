@@ -13,29 +13,30 @@ class InteractiveScatterplot:
         # Define the scatter plot with interactivity
         # This scatter plot looks at fatal injuries over time
         # With an interactive aspect which shows you incident data when you hover over a point, as well as moving and zooming capabilities
-        
+
         # Enable CSV transformer for handling large datasets
         alt.data_transformers.enable('csv')
 
+        # Filter the dataframe to only include events with at least one fatality
         df_fatalities = self.df_fatalities
-        
-        # Convert 'Number of Engines' to string for compatibility with radio button binding
-        df_fatalities['Number of Engines'] = df_fatalities['Number of Engines'].astype(str)
 
-       # Define a slider for filtering by the minimum number of fatalities
+        # Define a slider for filtering by the minimum number of fatalities
         slider_cutoff = alt.binding_range(min=0, max=df_fatalities['Total Fatal Injuries'].max(), step=1, name="Min Fatalities: ")
         slider_selection = alt.param(bind=slider_cutoff, value=0)  # Default slider value is 0
 
-        # Define an interactive selection for the number of engines with options as strings
+        # Define an interactive selection for aircraft damage
         input_radio = alt.binding_radio(
-            options=['1', '2', '3', '4', None],
-            labels=['1 Engine', '2 Engines', '3 Engines', '4 Engines', 'All'],
-            name="Engines: "
+            options=['Destroyed', 'Minor', 'Substantial', 'Unknown', None],
+            labels=['Destroyed', 'Minor', 'Substantial', 'Unknown', 'All'],
+            name="Aircraft Damage: "
         )
-        engine_filter = alt.selection_point(fields=['Number of Engines'], bind=input_radio)
+        damage_filter = alt.selection_point(fields=['Aircraft Damage'], bind=input_radio)
+
+        # Define a zoom selection
+        zoom = alt.selection_interval(bind='scales')
 
         # Define the base chart with square root scale, conditional opacity, and filters
-        scatter = alt.Chart(df_fatalities).mark_circle().encode(
+        scattter = alt.Chart(df_fatalities).mark_circle().encode(
             alt.X('Event Date:T', title='Date'),
             alt.Y('Total Fatal Injuries:Q', title='Fatal Injuries', scale=alt.Scale(type='sqrt')),
             alt.Color('Aircraft Damage:N', title='Aircraft Damage',
@@ -45,18 +46,20 @@ class InteractiveScatterplot:
                     'Total Serious Injuries:Q', 'Total Minor Injuries:Q', 'Total Uninjured:Q']
         ).add_params(
             slider_selection,
-            engine_filter
+            damage_filter,
+            zoom
         ).transform_filter(
             (alt.datum['Total Fatal Injuries'] >= slider_selection)  # Filter based on slider
         ).transform_filter(
-            engine_filter  # Filter based on engine selection
+            damage_filter  # Filter based on damage selection
         ).properties(
             title='Total Fatal Aircraft Injuries Over Time (Starting from 1980)',
             height=500,
             width=600
         )
-            
-        return scatter
+
+        # Display the interactive plot
+        return scattter
     
     def create_sum_plot(self):
         
